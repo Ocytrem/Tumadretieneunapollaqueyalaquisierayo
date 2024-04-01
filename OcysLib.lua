@@ -1130,8 +1130,8 @@ return LPH_JIT_MAX(function()
         if isValidEnumItem(enumItem) and (dependency == nil or table.find(dualBindKeys, dependency)) then
             self:EditVisual(enumItem.Name, dependency and dependency.Name);
             local oldValue = {
-                self.Value.Key,
-                self.Value.Dependency
+                Key = self.Value.Key,
+                Dependency = self.Value.Dependency
             };
             self.Value.Key = enumItem;
             self.Value.Dependency = dependency;

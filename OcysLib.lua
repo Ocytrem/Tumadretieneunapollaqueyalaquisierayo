@@ -10,7 +10,7 @@ if LPH_OBFUSCATED == nil then
 end
 
 return LPH_JIT_MAX(function()
-    if Ocy == nil or args[1] ~= LPH_ENCSTR("pgwVv3sx0eGBHB9z") then
+    if  args[1] ~= LPH_ENCSTR("pgwVv3sx0eGBHB9z") then
         return;
     end
 

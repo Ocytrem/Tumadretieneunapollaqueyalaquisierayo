@@ -10,7 +10,7 @@ if LPH_OBFUSCATED == nil then
 end
 
 return LPH_JIT_MAX(function()
-    if  args[1] ~= LPH_ENCSTR("pgwVv3sx0eGBHB9z") then
+    if args[1] ~= LPH_ENCSTR("pgwVv3sx0eGBHB9z") then
         return;
     end
 
@@ -2079,15 +2079,15 @@ return LPH_JIT_MAX(function()
         end
         if not justVisual then
             if self.RainbowConnection then
-                Ocy.Tracer:Remove(self.RainbowConnection);
+                self.RainbowConnection:Disconnect();
                 self.RainbowConnection = nil;
             end
             if state then
                 local offset = self.Library.Settings.SyncedHue - ({ toHSV(self.Color) })[1]; -- this is the variable randomly turning into a table (should be a number)
-                self.RainbowConnection = select(2, Ocy.Tracer:Connect(runService.Heartbeat, function()
+                self.RainbowConnection = runService.Heartbeat:Connect(function()
                     local _, s, v = toHSV(self.Color);
                     self:Set(colorFromHSV(self.Sync and self.Library.Settings.SyncedHue or (self.Library.Settings.SyncedHue - offset) % 1, s, v), self.Alpha); -- this is where it's erroring because `offset` has become a table
-                end));
+                end);
             end
             self.Rainbow = state;
             self.Library.Flags[self.Flag].Rainbow = state; -- self.Library.Flags[self.Flag] is the table it's randomly turning into
@@ -3562,8 +3562,6 @@ return LPH_JIT_MAX(function()
             })
         });
 
-        Ocy.Tracer:LogInstance(library.Directory);
-
         if #library.Storage > 0 then
             library.Store = library:Create("Folder", {
                 Name = "storage",
@@ -3608,11 +3606,11 @@ return LPH_JIT_MAX(function()
             library:Search(main.top.search.input.Text);
         end);
 
-        Ocy.Tracer:Connect(runService.Heartbeat, function()
+        runService.Heartbeat:Connect(function()
             library.Options.Settings.SyncedHue = tick() % library.Settings.RainbowDuration / library.Settings.RainbowDuration;
         end);
 
-        Ocy.Tracer:Connect(userInputService.InputBegan, function(input)
+        userInputService.InputBegan:Connect(function(input)
             if library.Settings.Binding == false and userInputService:GetFocusedTextBox() == nil then
                 local enumItem = input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode or input.UserInputType;
                 if enumItem.Name ~= "Escape" then
@@ -3625,7 +3623,7 @@ return LPH_JIT_MAX(function()
             end
         end);
 
-        Ocy.Tracer:Connect(userInputService.InputEnded, function(input)
+		userInputService.InputEnded:Connect(function(input)
             if library.Settings.Binding == false and userInputService:GetFocusedTextBox() == nil then
                 local enumItem = input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode or input.UserInputType;
                 if enumItem.Name ~= "Escape" then
@@ -4174,7 +4172,7 @@ return LPH_JIT_MAX(function()
             if state and getfpsmax == nil then
                 self:Notify({
                     Title = "VSyncNotSupported",
-                    Message = Ocy.Instance.Executor .. " does not support V-Sync"
+                    Message = "Your executor does not support V-Sync"
                 });
                 return false;
             end
@@ -4246,7 +4244,7 @@ return LPH_JIT_MAX(function()
             self.Items.ServerHop:Call(game.JobId);
         end });
 
-        Ocy.Tracer:Connect(guiService.ErrorMessageChanged, function(message)
+        guiService.ErrorMessageChanged:Connect(function(message)
             if table.find(blacklistedErrorMessages, message) == nil and self.Flags.HopOnKick then
                 self.Items.ServerHop:Call();
             end
